@@ -326,7 +326,7 @@ export default function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#home" onClick={(event) => { event.preventDefault(); go('home') }} aria-label="MFM Edinburgh home">
-          <img src={asset('images/mfm-logo-round.png')} alt="MFM logo" />
+          <img src={asset('images/mfm-logo.gif')} alt="MFM logo" />
           <span><strong>MFM</strong><small>Edinburgh</small></span>
         </a>
         <nav className={menuOpen ? 'nav open' : 'nav'} aria-label="Main navigation">
