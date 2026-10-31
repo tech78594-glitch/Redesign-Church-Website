@@ -20,9 +20,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-          # Images are stored in Git LFS (see .gitattributes); fetch the real files, not pointers
-          lfs: true
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
