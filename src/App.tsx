@@ -24,26 +24,206 @@ function YouTubeIcon({ size = 18 }: { size?: number }) {
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8ZM9.6 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg>
 }
 
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`
+
+const ADDRESS_SHORT = '13 Bangor Road, Leith'
+const ADDRESS_FULL = 'MFM Worship Centre (Zonal Headquarters), 13 Bangor Road, off Great Junction Street, Leith, Edinburgh EH6 5JY'
+const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=13+Bangor+Road+Leith+Edinburgh+EH6+5JY'
+
 const services = [
-  { day: 'SUN', date: '10:00', title: 'Sunday Worship', note: 'Celebration service & children’s church' },
-  { day: 'WED', date: '18:30', title: 'Manna Water', note: 'Prayer, teaching and spiritual renewal' },
-  { day: 'FRI', date: '23:00', title: 'Power Must Change Hands', note: 'First Friday of every month' },
+  { day: 'SUN', date: '09:30', title: 'Sunday Pentecostal Hour', note: '09:30 – 10:30 · Prayer before worship' },
+  { day: 'SUN', date: '10:30', title: 'Sunday Worship', note: '10:30 – 13:30 · Main celebration service' },
+  { day: 'TUE', date: '19:00', title: 'Spiritual Clinic, Prayer & Bible Studies', note: '19:00 – 21:00' },
+  { day: 'FRI', date: '18:00', title: 'Intercessory Prayer Session', note: '18:00 – 19:00' },
 ]
+
+const monthly = [
+  { title: 'Power Must Change Hands', when: 'First Saturday of every month', time: '09:00 – 12:00' },
+  { title: '“Meet Your Life Partner” — Singles & Youth Prayer Day', when: 'First Sunday of every month', time: '13:00 – 15:00' },
+  { title: 'The Deliverance Programme', when: 'Third Saturday, every two months', time: '09:00 – 13:00' },
+  { title: 'All Night Vigil', when: 'Last Friday of every month', time: '23:00 – early Saturday morning' },
+]
+
+const programme = [
+  ...services.map(s => ({ when: s.day === 'SUN' ? 'Sunday' : s.day === 'TUE' ? 'Tuesday' : 'Friday', title: s.title, time: s.note.split(' · ')[0] })),
+  ...monthly.map(m => ({ when: m.when, title: m.title, time: m.time })),
+]
+
+const galleryPhotos = {
+  olukoya: { src: 'images/gallery/dk-olukoya.jpg', caption: 'Dr D. K. Olukoya, General Overseer, MFM Worldwide' },
+  julian: { src: 'images/gallery/julian-50.jpg', caption: 'Julian, smiling at 50' },
+  ministersPolice: { src: 'images/gallery/ministers-police.jpg', caption: 'Our ministers with the police' },
+  youngCho: { src: 'images/gallery/young-cho.jpg', caption: 'With Young Cho' },
+  projectPolice: { src: 'images/gallery/project-police.jpg', caption: 'Community project with the police' },
+  interfaith: { src: 'images/gallery/interfaith-project.jpg', caption: 'Interfaith community project' },
+  yousaf: { src: 'images/gallery/humza-yousaf-visit.jpg', caption: 'Humza Yousaf, then Scottish Minister for External Affairs, visiting our event' },
+  bigPicture: { src: 'images/gallery/big-picture.jpg', caption: 'The Big Picture' },
+  youth: { src: 'images/gallery/youth.jpg', caption: 'The youth' },
+  poverty: { src: 'images/gallery/war-against-poverty.jpg', caption: 'War Against Poverty Conference' },
+  minister: { src: 'images/gallery/with-the-minister.jpg', caption: 'With the Minister' },
+  choir: { src: 'images/gallery/youth-choir.jpg', caption: 'Youth choir' },
+}
 
 type PageKey = 'home' | 'about' | 'education' | 'broadcast' | 'events' | 'testimonials' | 'programme' | 'community' | 'news' | 'videos' | 'gallery' | 'contact'
 
-const pages: Record<Exclude<PageKey, 'home'>, { eyebrow: string; title: string; intro: string; image: string; items: { title: string; text: string }[] }> = {
-  about: { eyebrow: 'Who we are', title: 'Faith with fire. Love in action.', intro: 'MFM Edinburgh is a full gospel family committed to prayer, holiness, and the transforming power of Jesus Christ.', image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Our vision', text: 'To raise a community of believers equipped to live victorious, purpose-filled lives.' }, { title: 'Our mission', text: 'To share the gospel, train hands for spiritual warfare, and serve our city with compassion.' }, { title: 'Our family', text: 'One church made richer by many cultures, generations, and stories of grace.' }] },
-  education: { eyebrow: 'Grow deeper', title: 'Truth for everyday life.', intro: 'Practical, Bible-centred learning designed to strengthen your faith and equip every generation.', image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Bible school', text: 'Build a strong foundation through structured teaching and guided study.' }, { title: 'Children & youth', text: 'Safe, engaging spaces where young people discover faith for themselves.' }, { title: 'Discipleship', text: 'Take your next step through mentoring, small groups, and spiritual formation.' }] },
-  broadcast: { eyebrow: 'Watch & listen', title: 'A word for your week.', intro: 'Catch up on teaching, prayer broadcasts, and moments from our worship gatherings.', image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Sunday message', text: 'Fresh, practical teaching from our weekly worship service.' }, { title: 'Prayer broadcast', text: 'Join focused prayer wherever you are, throughout the week.' }, { title: 'Pastor’s corner', text: 'Biblical encouragement and insight for your daily walk.' }] },
-  events: { eyebrow: 'What’s happening', title: 'There is a place for you.', intro: 'From worship nights to community gatherings, life is better when we gather together.', image: 'https://images.unsplash.com/photo-1496024840928-4c417adf211d?auto=format&fit=crop&w=1600&q=85', items: services.map(s => ({ title: s.title, text: `${s.day} · ${s.date} — ${s.note}` })) },
-  testimonials: { eyebrow: 'Stories of grace', title: 'God is still moving.', intro: 'Real stories from people whose lives have been changed through prayer, faith, and community.', image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Healing', text: 'Celebrating God’s restoring power in body, mind, and spirit.' }, { title: 'Breakthrough', text: 'Stories of answered prayer and doors opened by faith.' }, { title: 'New beginnings', text: 'Lives made new and hope rediscovered in Jesus.' }] },
-  programme: { eyebrow: 'Weekly rhythm', title: 'Make room for renewal.', intro: 'Join us throughout the week for worship, teaching, prayer, and fellowship.', image: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1600&q=85', items: services.map(s => ({ title: s.title, text: `${s.day} at ${s.date} · ${s.note}` })) },
-  community: { eyebrow: 'Edinburgh & beyond', title: 'Love must leave the building.', intro: 'We serve our neighbours with practical care, meaningful partnership, and the hope of the gospel.', image: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Community care', text: 'Practical support for individuals and families facing difficult seasons.' }, { title: 'Local partnerships', text: 'Working with others to create lasting good across Edinburgh.' }, { title: 'Volunteer', text: 'Use your time and gifts to make a tangible difference.' }] },
-  news: { eyebrow: 'Latest updates', title: 'Stay in the story.', intro: 'Announcements, reflections, and news from across the MFM Edinburgh family.', image: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'This week at MFM', text: 'Everything you need to know for our next gathering.' }, { title: 'Monthly focus', text: 'Prayer points and encouragement for the month ahead.' }, { title: 'Community update', text: 'See how your generosity and service are making an impact.' }] },
-  videos: { eyebrow: 'Video gallery', title: 'Watch faith come alive.', intro: 'Messages, worship, testimonies, and highlights from the life of our church.', image: 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Latest message', text: 'Watch this week’s teaching from MFM Edinburgh.' }, { title: 'Worship moments', text: 'Revisit powerful moments from our gatherings.' }, { title: 'Testimony stories', text: 'See and hear what God is doing in our community.' }] },
-  gallery: { eyebrow: 'Picture gallery', title: 'Life together, captured.', intro: 'A glimpse into our worship, fellowship, outreach, and shared life as one church family.', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Sunday gatherings', text: 'Worship, Word, prayer, and joyful fellowship.' }, { title: 'Special events', text: 'Conferences, celebrations, and unforgettable encounters.' }, { title: 'Serving Edinburgh', text: 'Our church family putting love into action.' }] },
-  contact: { eyebrow: 'Get in touch', title: 'We would love to hear from you.', intro: 'Questions, prayer requests, or planning a visit? Our team is ready to help.', image: 'https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Call us', text: '07557 644650' }, { title: 'Email us', text: 'info@mfmedinburgh.org' }, { title: 'Watch online', text: 'youtube.com/@MFMEDINBURGH' }, { title: 'Visit us', text: 'Edinburgh, Scotland · Sunday worship at 10:00 AM' }] },
+type PageItem = { title: string; text: string; href?: string; linkLabel?: string }
+type PageSection = { heading: string; paragraphs?: string[]; list?: string[] }
+type PageContent = {
+  eyebrow: string; title: string; intro: string; image: string; items: PageItem[]
+  sections?: PageSection[]
+  schedule?: { when: string; title: string; time: string }[]
+  gallery?: { src: string; caption: string }[]
+}
+
+const pages: Record<Exclude<PageKey, 'home'>, PageContent> = {
+  about: {
+    eyebrow: 'About us', title: 'Faith with fire. Love in action.',
+    intro: 'Welcome to the online home of the Mountain of Fire and Miracles Ministries, Edinburgh, Scotland.',
+    image: asset('images/gallery/big-picture.jpg'),
+    items: [
+      { title: 'Our mission', text: 'To propagate the gospel of our Lord Jesus Christ all over the world.' },
+      { title: 'Our vision', text: 'To promote the revival of apostolic signs, wonders and miracles, and to build an aggressive, heaven-bound end-time army for the Lord.' },
+      { title: 'Our name', text: 'Mountain — the place of victory. Fire — the baptism of the Holy Ghost and fire. Miracles — when you reach the mountain top and collect fire, miracles follow.' },
+    ],
+    sections: [
+      { heading: 'Who we are', paragraphs: [
+        'We are a God-friendly, non-denominational fellowship committed to raising up an army of prayer warriors, fully geared up to totally expose the activities of darkness in preparation for the coming of the end-time revival. We are deeply committed to absolute holiness as the greatest spiritual germicide and as a pre-condition for heaven.',
+        'Mountain of Fire and Miracles Ministries (MFM) is a full gospel ministry devoted to the revival of apostolic signs, Holy Ghost fireworks, and the unlimited power of God to deliver to the uttermost. MFM is a do-it-yourself gospel ministry where your hands are trained to wage war and your fingers to fight. Aggressive prayer is considered an aid to spiritual focus and a check against being overwhelmed by the flesh — at the MFM Prayer City, prayer goes on 24 hours a day, 7 days a week.',
+        'At MFM Edinburgh, we preach salvation, practise holiness within and without, and minister deliverance. We believe that sound Biblical knowledge is a prerequisite for good Christian living, and in bringing down the hand of God into our midst through Holy Ghost-filled praise and worship. Visit us today and experience God like never before.',
+      ] },
+      { heading: 'Our origin', paragraphs: [
+        'Soon after completing his Ph.D. in the United Kingdom, and while working at the Nigerian Institute of Medical Research, Dr Daniel Kolawole Olukoya called a prayer meeting on a Wednesday in 1989. Twenty-four brethren gathered in his living room. At the meetings that followed, the power of God came down, verifiable miracles began to happen, and people came from far and wide to seek the face of God.',
+        'The growing prayer group moved to 60 Old Yaba Road, Yaba, Lagos, and later bought an abandoned slum at 13 Olasimbo Street, Onike, Yaba, near the second gate of the University of Lagos. That site has been transformed into the International Headquarters of the Mountain of Fire and Miracles Ministries, of which Dr Olukoya is the General Overseer. The name was revealed to him in prayer, and the church held its first service on 24 April 1994.',
+        'Under the direction of the Lord, MFM grew into a network of branches. International branches began in London before spreading to the United States, Canada, the rest of Europe, the Caribbean, Africa and Asia — on every continent, MFM is profoundly visible and greatly impactful.',
+      ] },
+      { heading: 'Our name', paragraphs: [
+        'Mountain — the mountain top is a place of victory. Every serious minister of God must always be on the mountain in order to be above the power of darkness and do exploits for the Lord.',
+        'Fire — “I indeed baptize you with water unto repentance: but he that cometh after me is mightier than I, whose shoes I am not worthy to bear: he shall baptize you with the Holy Ghost, and with fire” (Matthew 3:11). The baptism of fire is the best thing that can happen to anyone.',
+        'Miracles — when you get to the mountain top and collect fire, miracles follow. Our tested and proven do-it-yourself approach to prayer warfare continues to provoke dumbfounding miracles and attract divine intervention in situations that had proven intractable.',
+      ] },
+      { heading: 'Our vision', list: [
+        'To promote the revival of apostolic signs, wonders and miracles',
+        'To bring together children of God who are lost in dead churches',
+        'To train believers in the art and science of spiritual warfare, making them an aggressive and victorious army for the Lord',
+        'To train believers to receive the Holy Ghost baptism and fire, and a daily walk and relationship with the Holy Spirit',
+        'To build an aggressive end-time army for the Lord',
+        'To deliver those who have become slaves to pastors, prophets and apostles',
+        'To build up heaven-bound and aggressive Christians — the priority in MFM is for people to make heaven',
+        'To build up prayer eagles',
+        'To purify the Pentecostal dirtiness of this age',
+      ] },
+      { heading: 'Our belief', list: [
+        'The Scriptures are the inspired Word of God, the only basis for our faith and fellowship',
+        'The fall and depravity of mankind, necessitating redemption through the Blood of Jesus Christ',
+        'Salvation through the redeeming work of Jesus Christ and the regenerative work of the Holy Spirit; sanctification as separation from that which is evil',
+        'The Baptism of the Holy Spirit — Acts 2:4; 10:44; 19:1–6',
+        'Restitution for past wrongs where possible',
+        'The ordinances of the Church: the Lord’s Supper and Water Baptism',
+        'The Church Universal, both visible and invisible',
+        'The Ministry divinely called and scripturally ordained, as approved of Almighty God',
+        'Divine healing as provided by the Lord Jesus Christ',
+        'The Rapture of all believers into the Marriage Supper of the Lamb, and the second advent of the Lord Jesus Christ',
+        'The Millennial Reign of Christ',
+        'The Final Judgment',
+        'The New Heaven and Earth',
+      ] },
+    ],
+  },
+  education: {
+    eyebrow: 'Grow deeper', title: 'Keep learning. Keep growing.',
+    intro: 'We believe sound Biblical knowledge is a prerequisite for good Christian living — and we encourage every member to keep learning.',
+    image: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'Bible studies', text: 'Join our Tuesday Spiritual Clinic, Prayer & Bible Studies, 19:00 – 21:00 at the church.' },
+      { title: 'International Business Management Institute', text: 'Quality, low-cost education for everyone, everywhere. Start your online learning experience. Berlin, Germany.', href: 'https://www.ibm-institute.com/', linkLabel: 'Visit website' },
+      { title: 'Christian Leaders Institute', text: 'Free courses that lead to award credentials, low-cost college credentials with the Christian Leaders College, or ordination with the Christian Leaders Alliance.', href: 'https://www.christianleaders.org/', linkLabel: 'Visit website' },
+    ],
+  },
+  broadcast: {
+    eyebrow: 'Watch & listen', title: 'A word for your week.',
+    intro: 'Catch up on Sunday services, special programmes and moments from our worship gatherings on our YouTube channel.',
+    image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'Sunday services', text: 'Watch our Sunday worship services in full, uploaded every week.' },
+      { title: 'Special programmes', text: 'Concerts, conferences and special services from the life of the church.' },
+      { title: 'Message archive', text: 'Browse every past message and broadcast on our YouTube channel.' },
+    ],
+  },
+  events: {
+    eyebrow: 'What’s happening', title: 'There is a place for you.',
+    intro: 'Alongside our weekly services, these special programmes run every month at the MFM Worship Centre in Leith.',
+    image: asset('images/gallery/war-against-poverty.jpg'),
+    items: monthly.map(m => ({ title: m.title, text: `${m.when} · ${m.time}` })),
+  },
+  testimonials: {
+    eyebrow: 'Stories of grace', title: 'God is still moving.',
+    intro: 'Testimonies abound of the awesome greatness of the Almighty God in our services. Has God done something for you? We would love to hear it.',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'Healing', text: 'Celebrating God’s restoring power in body, mind and spirit.' },
+      { title: 'Breakthrough', text: 'Stories of answered prayer and doors opened by faith.' },
+      { title: 'Share your testimony', text: 'Send us your testimony and give glory to God for what He has done.', href: 'mailto:info@mfmedinburgh.org?subject=My%20testimony', linkLabel: 'Send your testimony' },
+    ],
+  },
+  programme: {
+    eyebrow: 'Church programme', title: 'Make room for renewal.',
+    intro: 'All services take place at the MFM Worship Centre, 13 Bangor Road, Leith, Edinburgh EH6 5JY.',
+    image: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1600&q=85',
+    items: [],
+    schedule: programme,
+  },
+  community: {
+    eyebrow: 'Edinburgh & beyond', title: 'Love must leave the building.',
+    intro: 'We work alongside our neighbours, local services and community leaders to bring practical help and the hope of the gospel to Edinburgh.',
+    image: asset('images/gallery/ministers-police.jpg'),
+    items: [
+      { title: 'Working with the police', text: 'Partnering with local police on community projects.' },
+      { title: 'Interfaith projects', text: 'Building understanding with people of other faiths across our city.' },
+      { title: 'War Against Poverty', text: 'Bringing people together to tackle poverty in our community.' },
+    ],
+    gallery: [galleryPhotos.ministersPolice, galleryPhotos.projectPolice, galleryPhotos.interfaith, galleryPhotos.yousaf, galleryPhotos.poverty, galleryPhotos.bigPicture],
+  },
+  news: {
+    eyebrow: 'Latest updates', title: 'Stay in the story.',
+    intro: 'Announcements, reflections and news from across the MFM Edinburgh family.',
+    image: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'This week at MFM', text: 'Everything you need to know for our next gathering.' },
+      { title: 'Monthly programmes', text: 'Power Must Change Hands, the All Night Vigil and more.', href: '#events', linkLabel: 'See events' },
+      { title: 'Watch online', text: 'Missed a service? Catch up on our YouTube channel.', href: YOUTUBE_CHANNEL_URL, linkLabel: 'Watch on YouTube' },
+    ],
+  },
+  videos: {
+    eyebrow: 'Video gallery', title: 'Watch faith come alive.',
+    intro: 'Messages, worship, concerts and highlights from the life of our church.',
+    image: 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'Latest message', text: 'Watch this week’s service from MFM Edinburgh.' },
+      { title: 'Worship moments', text: 'Revisit powerful moments from our gatherings.' },
+      { title: 'Special events', text: 'Concerts, conferences and celebrations.' },
+    ],
+  },
+  gallery: {
+    eyebrow: 'Picture gallery', title: 'Life together, captured.',
+    intro: 'A glimpse into our worship, fellowship, outreach and shared life as one church family.',
+    image: asset('images/gallery/youth-choir.jpg'),
+    items: [],
+    gallery: Object.values(galleryPhotos),
+  },
+  contact: {
+    eyebrow: 'Get in touch', title: 'We would love to hear from you.',
+    intro: 'Questions, prayer requests, or planning a visit? Our team is ready to help.',
+    image: 'https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1600&q=85',
+    items: [
+      { title: 'Call us', text: '07557 644650 · 07725 699405', href: 'tel:+447557644650', linkLabel: 'Call now' },
+      { title: 'Email us', text: 'info@mfmedinburgh.org · mfmedinburgh@yahoo.co.uk', href: 'mailto:info@mfmedinburgh.org', linkLabel: 'Send an email' },
+      { title: 'Visit us', text: ADDRESS_FULL, href: MAPS_URL, linkLabel: 'Get directions' },
+      { title: 'Watch online', text: 'youtube.com/@MFMEDINBURGH', href: YOUTUBE_CHANNEL_URL, linkLabel: 'Watch on YouTube' },
+    ],
+    sections: [
+      { heading: 'Pastor and ministers', list: ['07725 699405', '07912 220450', '07947 171252', '07495 130674', '+44 (0)7770 620803'] },
+    ],
+  },
 }
 
 function InnerPage({ page, go, onPlay }: { page: Exclude<PageKey, 'home'>; go: (page: PageKey) => void; onPlay: () => void }) {
@@ -61,18 +241,59 @@ function InnerPage({ page, go, onPlay }: { page: Exclude<PageKey, 'home'>; go: (
     </section>
     <section className="page-body section">
       <div className="page-intro"><p className="kicker">Explore</p><h2>Find your next step.</h2></div>
-      <div className="feature-grid">
-        {content.items.map((item, index) => (
-          <article className="feature-card" key={item.title}>
-            <span>0{index + 1}</span>
-            {['broadcast','videos'].includes(page) && <button onClick={onPlay} aria-label={`Play ${item.title}`}><Icon name="play" /></button>}
-            <h3>{item.title}</h3><p>{item.text}</p>
-            {['broadcast','videos'].includes(page)
-              ? <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Watch on YouTube <Icon name="arrow" size={17} /></a>
-              : <a href="mailto:info@mfmedinburgh.org">Learn more <Icon name="arrow" size={17} /></a>}
-          </article>
-        ))}
-      </div>
+      {content.schedule && (
+        <div className="schedule">
+          {content.schedule.map((row) => (
+            <div className="schedule-row" key={row.title}>
+              <span className="schedule-when">{row.when}</span>
+              <strong>{row.title}</strong>
+              <span className="schedule-time">{row.time}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {content.items.length > 0 && (
+        <div className={content.items.length === 4 ? 'feature-grid two-col' : 'feature-grid'}>
+          {content.items.map((item, index) => {
+            const isVideo = ['broadcast','videos'].includes(page)
+            const href = item.href ?? (isVideo ? YOUTUBE_CHANNEL_URL : 'mailto:info@mfmedinburgh.org')
+            const label = item.linkLabel ?? (isVideo ? 'Watch on YouTube' : 'Learn more')
+            const external = href.startsWith('http')
+            const internal = href.startsWith('#') ? (href.slice(1) as PageKey) : null
+            return (
+              <article className="feature-card" key={item.title}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {isVideo && <button onClick={onPlay} aria-label={`Play ${item.title}`}><Icon name="play" /></button>}
+                <h3>{item.title}</h3><p>{item.text}</p>
+                {page !== 'about' && <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} onClick={internal ? (event) => { event.preventDefault(); go(internal) } : undefined}>{label} <Icon name="arrow" size={17} /></a>}
+              </article>
+            )
+          })}
+        </div>
+      )}
+      {content.sections && (
+        <div className="page-sections">
+          {content.sections.map((section) => (
+            <section className="page-section" key={section.heading}>
+              <h3>{section.heading}</h3>
+              <div>
+                {section.paragraphs?.map((text) => <p key={text.slice(0, 40)}>{text}</p>)}
+                {section.list && <ul>{section.list.map((text) => <li key={text}>{text}</li>)}</ul>}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+      {content.gallery && (
+        <div className="photo-grid">
+          {content.gallery.map((photo) => (
+            <figure key={photo.src}>
+              <img src={asset(photo.src)} alt={photo.caption} loading="lazy" />
+              <figcaption>{photo.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
     </section>
     <section className="site-directory">
       <p>More from MFM Edinburgh</p>
@@ -105,7 +326,7 @@ export default function App() {
     <main>
       <header className="site-header">
         <a className="brand" href="#home" onClick={(event) => { event.preventDefault(); go('home') }} aria-label="MFM Edinburgh home">
-          <img src="https://mfmedinburgh.org/assets/logo/logo1.gif" alt="MFM logo" />
+          <img src={asset('images/mfm-logo.gif')} alt="MFM logo" />
           <span><strong>MFM</strong><small>Edinburgh</small></span>
         </a>
         <nav className={menuOpen ? 'nav open' : 'nav'} aria-label="Main navigation">
@@ -134,9 +355,9 @@ export default function App() {
         </div>
         <div className="service-ribbon">
           <div><Icon name="calendar" /><span><small>Next gathering</small><strong>Sunday Worship</strong></span></div>
-          <div><Icon name="clock" /><span><small>Service time</small><strong>10:00 AM</strong></span></div>
-          <div><Icon name="location" /><span><small>Find us</small><strong>Edinburgh, Scotland</strong></span></div>
-          <a href="#visit">Get directions <Icon name="arrow" size={18} /></a>
+          <div><Icon name="clock" /><span><small>Service time</small><strong>10:30 AM</strong></span></div>
+          <div><Icon name="location" /><span><small>Find us</small><strong>{ADDRESS_SHORT}</strong></span></div>
+          <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">Get directions <Icon name="arrow" size={18} /></a>
         </div>
         <a className="scroll" href="#welcome"><span /> Scroll to explore</a>
       </section>
@@ -147,11 +368,11 @@ export default function App() {
           <p className="kicker">More than a church</p>
           <h2>Welcome home.</h2>
           <p className="lead">Wherever you are on your journey, there’s a place for you here.</p>
-          <p>We are a full gospel ministry devoted to the revival of apostolic signs, Holy Ghost power, and the unlimited demonstration of God’s ability to deliver to the uttermost.</p>
-          <a className="text-link" href="#about">Discover our story <Icon name="arrow" size={18} /></a>
+          <p>MFM is a full gospel ministry devoted to the revival of apostolic signs, Holy Ghost fireworks, and the unlimited demonstration of the power of God to deliver to the uttermost. Absolute holiness within and without is taught openly — and here, your hands are trained to wage war and your fingers to do battle.</p>
+          <a className="text-link" href="#about" onClick={(event) => { event.preventDefault(); go('about') }}>Discover our story <Icon name="arrow" size={18} /></a>
         </div>
         <div className="welcome-image">
-          <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=85" alt="A joyful, welcoming community gathered together" />
+          <img src={asset('images/gallery/julian-50.jpg')} alt="The MFM Edinburgh congregation gathered in worship" />
           <div className="image-note"><strong>Everyone</strong><span>has a place at the table.</span></div>
         </div>
       </section>
@@ -171,22 +392,23 @@ export default function App() {
             </a>
           ))}
         </div>
+        <a className="text-link light" href="#programme" onClick={(event) => { event.preventDefault(); go('programme') }}>See the full church programme <Icon name="arrow" size={18} /></a>
       </section>
 
       <section className="mission section" id="about">
         <div className="mission-image">
-          <img src="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1200&q=85" alt="Church community worshipping together" />
+          <img src={asset('images/gallery/big-picture.jpg')} alt="MFM Edinburgh choir performing on stage at The Big Picture event" />
           <button aria-label="Play our story" onClick={() => setVideoOpen(true)}><Icon name="play" size={24} /></button>
         </div>
         <div className="mission-copy">
           <p className="kicker">Our mission</p>
           <h2>Pray. Grow.<br /><em>Make an impact.</em></h2>
-          <p>We exist to help people discover freedom in Christ, grow through the Word, and bring hope to Edinburgh and beyond.</p>
+          <p>To propagate the gospel of our Lord Jesus Christ all over the world — preaching salvation, practising holiness within and without, and ministering deliverance here in Edinburgh.</p>
           <div className="stats">
             <div><Icon name="users" /><strong>One family</strong><span>Many nations</span></div>
             <div><Icon name="location" /><strong>One mission</strong><span>Transform lives</span></div>
           </div>
-          <a className="button dark" href="#ministries">Explore our ministries <Icon name="arrow" /></a>
+          <a className="button dark" href="#programme" onClick={(event) => { event.preventDefault(); go('programme') }}>See our church programme <Icon name="arrow" /></a>
         </div>
       </section>
 
@@ -194,17 +416,18 @@ export default function App() {
         <div>
           <p className="kicker light">Your next step</p>
           <h2>We saved you a seat.</h2>
-          <p>Walking into a new church can feel like a big step. We’ll make your first visit simple, warm and welcoming.</p>
+          <p>Walking into a new church can feel like a big step. We’ll make your first visit simple, warm and welcoming. Join us on Sundays from 09:30 at the MFM Worship Centre, 13 Bangor Road, off Great Junction Street, Leith, Edinburgh EH6 5JY.</p>
         </div>
-        <a className="button white" href="mailto:info@mfmedinburgh.org">Plan your visit <Icon name="arrow" /></a>
+        <a className="button white" href={MAPS_URL} target="_blank" rel="noopener noreferrer">Get directions <Icon name="arrow" /></a>
       </section>
       </> : <InnerPage page={page} go={go} onPlay={() => setVideoOpen(true)} />}
 
       <footer id="contact">
         <div className="footer-brand">MFM <span>Edinburgh</span></div>
-        <div><small>Connect</small><a href="tel:+447557644650">07557 644650</a><a href="mailto:info@mfmedinburgh.org">info@mfmedinburgh.org</a><a className="footer-youtube" href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer"><YouTubeIcon size={16} /> YouTube</a></div>
+        <div><small>Connect</small><a href="tel:+447557644650">07557 644650</a><a href="tel:+447725699405">07725 699405</a><a href="mailto:info@mfmedinburgh.org">info@mfmedinburgh.org</a><a className="footer-youtube" href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer"><YouTubeIcon size={16} /> YouTube</a></div>
         <div><small>Explore</small><a href="#about" onClick={(e) => {e.preventDefault();go('about')}}>About us</a><a href="#programme" onClick={(e) => {e.preventDefault();go('programme')}}>Church programme</a><a href="#broadcast" onClick={(e) => {e.preventDefault();go('broadcast')}}>Messages</a></div>
-        <p>© 2025 MFM Edinburgh<br />Made for faith. Built for community.</p>
+        <div><small>Visit</small><a href={MAPS_URL} target="_blank" rel="noopener noreferrer">MFM Worship Centre<br />13 Bangor Road, Leith<br />Edinburgh EH6 5JY</a></div>
+        <p>© {new Date().getFullYear()} MFM Edinburgh<br />Made for faith. Built for community.</p>
       </footer>
 
       {videoOpen && (

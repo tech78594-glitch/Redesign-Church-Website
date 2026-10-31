@@ -145,3 +145,33 @@ footer div:not(.footer-brand){display:grid;gap:9px}footer small{color:#a99fab;te
  .hero-content{padding-top:110px}.hero-content>p{margin:16px 0}.hero-actions{gap:12px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}.hero-bg,.hero-content{animation:none}}
+
+/* Church programme timetable */
+.schedule{display:grid;border-top:1px solid #d8d0d7;margin-bottom:10px}
+.schedule-row{display:grid;grid-template-columns:minmax(150px,1.1fr) 2fr minmax(140px,1fr);gap:24px;align-items:center;padding:26px 0;border-bottom:1px solid #d8d0d7}
+.schedule-when{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red)}
+.schedule-row strong{font:700 clamp(19px,1.8vw,25px) 'Manrope';color:var(--purple)}
+.schedule-time{font-size:15px;color:#776e77;text-align:right}
+/* Long-form page sections (About, Contact) */
+.page-sections{display:grid;gap:0;margin-top:70px;border-top:1px solid #d8d0d7}
+.page-section{display:grid;grid-template-columns:minmax(180px,1fr) 2.4fr;gap:40px;padding:48px 0;border-bottom:1px solid #d8d0d7}
+.page-section h3{font:700 clamp(24px,2.4vw,34px) 'Manrope';margin:0;color:var(--purple)}
+.page-section p{font-size:16px;line-height:1.85;color:#5f565f;margin:0 0 18px;max-width:780px}
+.page-section ul{margin:0;padding:0;list-style:none;display:grid;gap:12px;max-width:780px}
+.page-section li{position:relative;padding-left:26px;font-size:16px;line-height:1.7;color:#5f565f}
+.page-section li::before{content:'';position:absolute;left:0;top:.7em;width:12px;height:2px;background:var(--red)}
+/* Photo gallery */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:70px}
+.photo-grid figure{margin:0;background:white;box-shadow:0 10px 30px rgba(38,15,42,.07)}
+.photo-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.photo-grid figcaption{padding:16px 18px;font-size:14px;line-height:1.5;color:#5f565f}
+.text-link.light{color:#f1d9f7;margin-top:40px}
+footer>p{grid-column:1/-1}
+@media (max-width:900px){
+  .photo-grid{grid-template-columns:1fr 1fr}
+  .page-section{grid-template-columns:1fr;gap:18px}
+  .schedule-row{grid-template-columns:1fr;gap:6px}.schedule-time{text-align:left}
+}
+@media (max-width:560px){.photo-grid{grid-template-columns:1fr}}
+.feature-grid.two-col{grid-template-columns:repeat(2,1fr)}
+@media (max-width:560px){.feature-grid.two-col{grid-template-columns:1fr}}
