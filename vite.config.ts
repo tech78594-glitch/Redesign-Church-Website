@@ -6,6 +6,12 @@ import path from 'node:path'
 
 import siteConfiguration from './.figma/make/site.json'
 
+// Public base path. GitHub Pages serves project sites from /<repo-name>/,
+// so the deploy workflow sets BASE_PATH. Locally it stays '/'.
+const basePath = process.env.FIGMA_PUBLIC_URL
+  ? `${process.env.FIGMA_PUBLIC_URL}/`
+  : process.env.BASE_PATH || '/'
+
 
 // Vite config — https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -13,7 +19,7 @@ export default defineConfig(({ mode }) => {
   const emitSourcemaps = mode === 'development'
 
   return {
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
+    base: basePath,
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
@@ -91,7 +97,7 @@ function figmaSiteConfiguration(config: FigmaSiteConfiguration): Plugin {
   const title = config.title ?? "Figma Make App"
   const description = config.description ?? ''
   // Imported HTML keeps its own favicon; new Makes default to the Make product icon.
-  const favicon = config.icons?.icon ?? '/favicon.svg'
+  const favicon = config.icons?.icon ?? `${basePath}favicon.svg`
   const socialImage = config.openGraph?.image ?? ''
   const language = sanitizeHtmlValue(config.language) || 'en'
   const googleAnalyticsId = sanitizeHtmlValue(config.analytics?.googleAnalyticsId)
