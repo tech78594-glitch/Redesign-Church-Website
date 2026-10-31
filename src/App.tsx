@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type IconName = 'arrow' | 'calendar' | 'clock' | 'location' | 'menu' | 'play' | 'users' | 'x'
 
@@ -14,6 +14,14 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
     x: <><path d="m6 6 12 12M18 6 6 18"/></>,
   }
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>
+}
+
+// YouTube channel. The embed plays the channel's uploads playlist, so it always starts with the newest video.
+const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@MFMEDINBURGH'
+const YOUTUBE_LATEST_EMBED = 'https://www.youtube.com/embed/videoseries?list=UU1s9pVF23PCw5VrhTAuHJiQ&autoplay=1&rel=0'
+
+function YouTubeIcon({ size = 18 }: { size?: number }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1c.4-1.6.5-4.8.5-4.8s0-3.2-.5-4.8ZM9.6 15.1V8.9l5.8 3.1-5.8 3.1Z"/></svg>
 }
 
 const services = [
@@ -35,7 +43,7 @@ const pages: Record<Exclude<PageKey, 'home'>, { eyebrow: string; title: string; 
   news: { eyebrow: 'Latest updates', title: 'Stay in the story.', intro: 'Announcements, reflections, and news from across the MFM Edinburgh family.', image: 'https://images.unsplash.com/photo-1495020689067-958852a7765e?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'This week at MFM', text: 'Everything you need to know for our next gathering.' }, { title: 'Monthly focus', text: 'Prayer points and encouragement for the month ahead.' }, { title: 'Community update', text: 'See how your generosity and service are making an impact.' }] },
   videos: { eyebrow: 'Video gallery', title: 'Watch faith come alive.', intro: 'Messages, worship, testimonies, and highlights from the life of our church.', image: 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Latest message', text: 'Watch this week’s teaching from MFM Edinburgh.' }, { title: 'Worship moments', text: 'Revisit powerful moments from our gatherings.' }, { title: 'Testimony stories', text: 'See and hear what God is doing in our community.' }] },
   gallery: { eyebrow: 'Picture gallery', title: 'Life together, captured.', intro: 'A glimpse into our worship, fellowship, outreach, and shared life as one church family.', image: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Sunday gatherings', text: 'Worship, Word, prayer, and joyful fellowship.' }, { title: 'Special events', text: 'Conferences, celebrations, and unforgettable encounters.' }, { title: 'Serving Edinburgh', text: 'Our church family putting love into action.' }] },
-  contact: { eyebrow: 'Get in touch', title: 'We would love to hear from you.', intro: 'Questions, prayer requests, or planning a visit? Our team is ready to help.', image: 'https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Call us', text: '07557 644650' }, { title: 'Email us', text: 'info@mfmedinburgh.org' }, { title: 'Visit us', text: 'Edinburgh, Scotland · Sunday worship at 10:00 AM' }] },
+  contact: { eyebrow: 'Get in touch', title: 'We would love to hear from you.', intro: 'Questions, prayer requests, or planning a visit? Our team is ready to help.', image: 'https://images.unsplash.com/photo-1564399579883-451a5d44ec08?auto=format&fit=crop&w=1600&q=85', items: [{ title: 'Call us', text: '07557 644650' }, { title: 'Email us', text: 'info@mfmedinburgh.org' }, { title: 'Watch online', text: 'youtube.com/@MFMEDINBURGH' }, { title: 'Visit us', text: 'Edinburgh, Scotland · Sunday worship at 10:00 AM' }] },
 }
 
 function InnerPage({ page, go, onPlay }: { page: Exclude<PageKey, 'home'>; go: (page: PageKey) => void; onPlay: () => void }) {
@@ -59,7 +67,9 @@ function InnerPage({ page, go, onPlay }: { page: Exclude<PageKey, 'home'>; go: (
             <span>0{index + 1}</span>
             {['broadcast','videos'].includes(page) && <button onClick={onPlay} aria-label={`Play ${item.title}`}><Icon name="play" /></button>}
             <h3>{item.title}</h3><p>{item.text}</p>
-            <a href="mailto:info@mfmedinburgh.org">Learn more <Icon name="arrow" size={17} /></a>
+            {['broadcast','videos'].includes(page)
+              ? <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer">Watch on YouTube <Icon name="arrow" size={17} /></a>
+              : <a href="mailto:info@mfmedinburgh.org">Learn more <Icon name="arrow" size={17} /></a>}
           </article>
         ))}
       </div>
@@ -79,6 +89,12 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [videoOpen, setVideoOpen] = useState(false)
   const [page, setPage] = useState<PageKey>('home')
+  useEffect(() => {
+    if (!videoOpen) return
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setVideoOpen(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [videoOpen])
   const go = (next: PageKey) => {
     setPage(next)
     setMenuOpen(false)
@@ -186,15 +202,20 @@ export default function App() {
 
       <footer id="contact">
         <div className="footer-brand">MFM <span>Edinburgh</span></div>
-        <div><small>Connect</small><a href="tel:+447557644650">07557 644650</a><a href="mailto:info@mfmedinburgh.org">info@mfmedinburgh.org</a></div>
+        <div><small>Connect</small><a href="tel:+447557644650">07557 644650</a><a href="mailto:info@mfmedinburgh.org">info@mfmedinburgh.org</a><a className="footer-youtube" href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer"><YouTubeIcon size={16} /> YouTube</a></div>
         <div><small>Explore</small><a href="#about" onClick={(e) => {e.preventDefault();go('about')}}>About us</a><a href="#programme" onClick={(e) => {e.preventDefault();go('programme')}}>Church programme</a><a href="#broadcast" onClick={(e) => {e.preventDefault();go('broadcast')}}>Messages</a></div>
         <p>© 2025 MFM Edinburgh<br />Made for faith. Built for community.</p>
       </footer>
 
       {videoOpen && (
-        <div className="modal" role="dialog" aria-modal="true" aria-label="Latest message">
+        <div className="modal" role="dialog" aria-modal="true" aria-label="Latest message" onClick={() => setVideoOpen(false)}>
           <button onClick={() => setVideoOpen(false)} aria-label="Close video"><Icon name="x" /></button>
-          <div><span><Icon name="play" size={34} /></span><h3>Latest message</h3><p>Video broadcast coming soon.</p></div>
+          <div className="modal-video" onClick={(event) => event.stopPropagation()}>
+            <div className="video-frame">
+              <iframe src={YOUTUBE_LATEST_EMBED} title="Latest message from MFM Edinburgh" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+            </div>
+            <a className="button primary" href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer"><YouTubeIcon /> More messages on YouTube</a>
+          </div>
         </div>
       )}
     </main>
